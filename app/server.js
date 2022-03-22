@@ -7,7 +7,7 @@ const htmlGenerator = require('./html-generator');
 const app = express();
 const port = config.PORT || 3030;
 
-var pusherSdkArgs = {
+const pusherSdkArgs = {
   appId: config.APP_ID,
   key: config.APP_KEY,
   secret: config.APP_SECRET,
@@ -72,8 +72,13 @@ app.post(config.ENDPOINT, (req, res) => {
     res.send(auth);
   } else {
     let auth = pusher.authenticate(socketId, channelName);
+    pusher.trigger("my-channel", "my-event", {
+      message: "hello world",
+    });
     res.send(auth);
   }
+
+
 });
 
 const html = htmlGenerator.generate(config.ENDPOINT);
