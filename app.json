@@ -9,17 +9,17 @@
   "image": "heroku/nodejs",
   "env": {
     "APP_ID": {
-      "description": "AppId from the pusher dashboard"
+      "description": "1364833"
     },
     "APP_KEY": {
-      "description": "AppKey from the pusher dashboard"
+      "description": "94db23f60a72fb315a70"
     },
 
     "APP_SECRET": {
-      "description": "AppSecret from the pusher dashboard"
+      "description": "bd540eabe0c92baa34b2"
     },
     "CLUSTER": {
-      "description": "Cluster from the pusher dashboard",
+      "description": "eu",
       "required": false
     },
     "CHANNELS_HOST": {
