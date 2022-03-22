@@ -47,6 +47,7 @@ console.log(config);
 app.post(config.ENDPOINT, (req, res) => {
   debug('received auth request');
   debug('req.body:', req.body);
+  console.log( req.params)
   // Some logic to determine whether the user making the request has access to
   // the private channel
   // ...
