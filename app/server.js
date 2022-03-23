@@ -74,10 +74,11 @@ app.post(config.ENDPOINT, (req, res) => {
     res.send(auth);
   } else {
     let auth = pusher.authenticate(socketId, channelName);
-    pusher.trigger("private-document", "my-event", {
+    let msg = pusher.trigger("private-document", "message", {
       message: "hello world",
     });
     res.send(auth);
+    res.send(msg);
   }
 
 
@@ -88,7 +89,7 @@ app.post("//pusher/auth/message", (req, res) => {
   const param = req.params
   pusher.trigger(
       "private-document",
-      "my-event",
+      "message",
       {
         message: "hello world",
       },
