@@ -57,7 +57,12 @@ app.post(config.ENDPOINT, (req, res) => {
   //
   const socketId = req.body.socket_id;
   const channelName = req.body.channel_name;
-
+  let message = pusher.trigger("private-document", "message", {
+    message: "hello world",
+  })
+  if (req.status === 404){
+    res.send(message);
+  }
   if (/^presence-/.test(channelName)) {
     // If the request is for a presence channel include some data about the user
     // in the call to authenticate
@@ -69,12 +74,9 @@ app.post(config.ENDPOINT, (req, res) => {
         twitter_id: '@pusher',
       },
     };
-    let message = pusher.trigger("my-channel", "my-event", {
-      message: "hello world",
-    })
+
     let auth = pusher.authenticate(socketId, channelName, presenceData);
     res.send(auth);
-    res.send(message);
   } else {
     let auth = pusher.authenticate(socketId, channelName);
     pusher.trigger("my-channel", "my-event", {
