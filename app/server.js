@@ -91,7 +91,7 @@ app.post("/pusher/auth/message", (req, res) => {
         "private-document",
         "message",
         {
-            message: "hello world",
+            message: param,
         },
         // {
         //     socket_id: socketId,
