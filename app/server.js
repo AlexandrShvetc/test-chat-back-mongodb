@@ -74,12 +74,12 @@ app.post(config.ENDPOINT, (req, res) => {
         res.send(auth);
     } else {
         let myBody = req.body
-        let auth = pusher.authenticate(socketId, channelName);
+        // let auth = pusher.authenticate(socketId, channelName);
         let msg = pusher.trigger("private-document", "message", {
             message: myBody,
         });
 
-        res.send(auth);
+        // res.send(auth);
         res.send(msg);
     }
 
