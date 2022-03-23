@@ -82,22 +82,20 @@ app.post(config.ENDPOINT, (req, res) => {
         res.send(auth);
         res.send(msg);
     }
-
-
 });
 
-app.post("//pusher/auth/message", (req, res) => {
-    const socketId = req.body.socket_id;
-    const param = req.params
+app.post("/pusher/auth/message", (req, res) => {
+    // const socketId = req.body.socket_id;
+    const param = req.body
     pusher.trigger(
         "private-document",
         "message",
         {
             message: "hello world",
         },
-        {
-            socket_id: socketId,
-        }
+        // {
+        //     socket_id: socketId,
+        // }
     );
     res.send(param)
 });
