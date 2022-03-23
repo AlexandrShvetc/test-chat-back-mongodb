@@ -69,8 +69,12 @@ app.post(config.ENDPOINT, (req, res) => {
         twitter_id: '@pusher',
       },
     };
+    let message = pusher.trigger("my-channel", "my-event", {
+      message: "hello world",
+    })
     let auth = pusher.authenticate(socketId, channelName, presenceData);
     res.send(auth);
+    res.send(message);
   } else {
     let auth = pusher.authenticate(socketId, channelName);
     pusher.trigger("my-channel", "my-event", {
