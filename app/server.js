@@ -98,8 +98,8 @@ app.post("/pusher/auth/message", (req, res) => {
 });
 
 app.get("/pusher/auth/?*", (req, res) =>{
-    const param = req.params
-    res.send(req.params)
+    const param = {data: req.params}
+    res.send(param)
 });
 
 const html = htmlGenerator.generate(config.ENDPOINT);
