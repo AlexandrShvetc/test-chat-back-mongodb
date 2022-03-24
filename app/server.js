@@ -63,7 +63,7 @@ app.post(config.ENDPOINT, (req, res) => {
         // in the call to authenticate
         let timestamp = new Date().toISOString();
         let presenceData = {
-            user_id: `${JSON.stringify(req.params)}-${timestamp}`,
+            user_id: `${JSON.stringify(req.body)}-${timestamp}`,
             user_info: {
                 name: 'Pusherino',
                 twitter_id: '@pusher',
