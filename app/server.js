@@ -76,7 +76,7 @@ app.post(config.ENDPOINT, (req, res) => {
         //     channelName: channelName,
         //     presenceData: presenceData,
         // }
-        res.send(auth);
+        res.send(req.params);
     } else {
         let myBody = req.body
         let auth = pusher.authenticate(socketId, channelName);
