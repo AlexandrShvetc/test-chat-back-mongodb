@@ -98,7 +98,7 @@ app.post("/pusher/auth/message", (req, res) => {
 });
 
 app.get("/pusher/auth/?*", (req, res) =>{
-    const param =  req.body
+    const param =  JSON.stringify(req)
     res.send(param)
 });
 
