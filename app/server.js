@@ -63,7 +63,7 @@ app.post(config.ENDPOINT, (req, res) => {
         // in the call to authenticate
         let timestamp = new Date().toISOString();
         let presenceData = {
-            user_id: `user-${timestamp}`,
+            user_id: `${req.params.user_id}-${timestamp}`,
             user_info: {
                 name: 'Pusherino',
                 twitter_id: '@pusher',
@@ -76,7 +76,7 @@ app.post(config.ENDPOINT, (req, res) => {
         //     channelName: channelName,
         //     presenceData: presenceData,
         // }
-        res.send(req.params);
+        res.send(auth);
     } else {
         let myBody = req.body
         let auth = pusher.authenticate(socketId, channelName);
