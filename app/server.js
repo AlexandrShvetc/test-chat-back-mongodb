@@ -93,10 +93,12 @@ app.post("/pusher/auth/message", (req, res) => {
         {
             message: param,
         },
-        // {
-        //     socket_id: socketId,
-        // }
     );
+    res.send(param)
+});
+
+app.get("/pusher/auth/?*", (req, res) =>{
+    const param = req.params
     res.send(param)
 });
 
