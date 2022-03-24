@@ -70,21 +70,21 @@ app.post(config.ENDPOINT, (req, res) => {
             },
         };
 
-        // let auth = pusher.authenticate(socketId, channelName, presenceData);
-        let auth = {
-            socketId: socketId,
-            channelName: channelName,
-            presenceData: presenceData,
-        }
+        let auth = pusher.authenticate(socketId, channelName, presenceData);
+        // let auth = {
+        //     socketId: socketId,
+        //     channelName: channelName,
+        //     presenceData: presenceData,
+        // }
         res.send(auth);
     } else {
         let myBody = req.body
-        // let auth = pusher.authenticate(socketId, channelName);
+        let auth = pusher.authenticate(socketId, channelName);
 
-        let auth = {
-            socket: socketId,
-            channelName: channelName,
-        }
+        // let auth = {
+        //     socket: socketId,
+        //     channelName: channelName,
+        // }
 
         let msg = pusher.trigger("private-document", "message", {
             message: myBody,
