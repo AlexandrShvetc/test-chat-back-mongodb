@@ -65,8 +65,7 @@ app.post(config.ENDPOINT, (req, res) => {
         let presenceData = {
             user_id: `${req.body.user_id}-${timestamp}`,
             user_info: {
-                name: 'Pusherino',
-                twitter_id: '@pusher',
+                name: `${req.body.name}`,
             },
         };
 
@@ -78,17 +77,8 @@ app.post(config.ENDPOINT, (req, res) => {
         // }
         res.send(auth);
     } else {
-        let myBody = req.body
+        // let myBody = req.body
         let auth = pusher.authenticate(socketId, channelName);
-
-        // let auth = {
-        //     socket: socketId,
-        //     channelName: channelName,
-        // }
-
-        let msg = pusher.trigger("private-document", "message", {
-            message: myBody,
-        });
 
         res.send(auth);
         // res.send(msg);
@@ -99,7 +89,7 @@ app.post("/pusher/auth/message", (req, res) => {
     // const socketId = req.body.socket_id;
     const param = req.body
     pusher.trigger(
-        "private-document",
+        "presence-chat",
         "message",
         {
             message: param,
