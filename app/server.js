@@ -125,7 +125,7 @@ app.post("/pusher/auth/signing", (req, res) => {
     const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
     const checkUser = collection.findOne(query, options);
     const error = {
-        err: JSON.stringify(checkUser)
+        err: checkUser
     };
     if (checkUser) return res.send(error);
     collection.insertOne(user, function(err, result){
