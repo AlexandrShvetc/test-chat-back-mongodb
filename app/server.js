@@ -121,7 +121,9 @@ app.post("/pusher/auth/signing", (req, res) => {
         password: req.body.password
     };
     const collection = req.app.locals.collection;
-    const checkUser = collection.findOne({email: req.body.email});
+    const query = {email: req.body.email};
+    const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
+    const checkUser = collection.findOne(query, options);
     const error = {
         err: checkUser
     };
