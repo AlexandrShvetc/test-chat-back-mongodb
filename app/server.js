@@ -122,7 +122,7 @@ app.post("/pusher/auth/signing", (req, res) => {
     };
 
     const collection = req.app.locals.collection;
-    collection.insert(user, function(err, result){
+    collection.insertOne(user, function(err, result){
         if(err) return console.log(err);
         res.send(user);
     });
