@@ -121,7 +121,7 @@ app.post("/pusher/auth/signing", (req, res) => {
         password: req.body.password
     };
     const collection = req.app.locals.collection;
-    const checkUser = req.app.locals.collection.findOne({email: req.body.email});
+    const checkUser = collection.findOne({email: req.body.email});
     const error = {
         err: checkUser
     };
