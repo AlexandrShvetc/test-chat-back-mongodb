@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const Pusher = require('pusher');
 const config = require('./config');
 const htmlGenerator = require('./html-generator');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+
 
 const app = express();
 const port = config.PORT || 3030;
@@ -34,6 +36,9 @@ const debug = (...args) => {
     }
 };
 
+const uri = "mongodb+srv://bx6838ck:bx6838ck@cheapdeepchat.avume.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
 // Allow CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -42,6 +47,15 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+client.connect(function(err, client){
+    if(err) return console.log(err);
+    // dbClient = client;
+    app.locals.collection = client.db("chatdb").collection("users");
+    app.listen(3000, function(){
+        console.log("Сервер ожидает подключения...");
+    });
+});
 
 console.log(config);
 app.post(config.ENDPOINT, (req, res) => {
@@ -70,14 +84,8 @@ app.post(config.ENDPOINT, (req, res) => {
         };
 
         let auth = pusher.authenticate(socketId, channelName, presenceData);
-        // let auth = {
-        //     socketId: socketId,
-        //     channelName: channelName,
-        //     presenceData: presenceData,
-        // }
         res.send(auth);
     } else {
-        // let myBody = req.body
         let auth = pusher.authenticate(socketId, channelName);
 
         res.send(auth);
@@ -96,6 +104,28 @@ app.post("/pusher/auth/message", (req, res) => {
         },
     );
     res.send(param)
+});
+
+app.post("/pusher/auth/signing", (req, res) => {
+
+    if(!req.body) return res.sendStatus(400);
+    //
+    // const id = req.body.id;
+    // const name = req.body.name;
+    // const email = req.body.email;
+    // const password = req.body.password;
+    const user = {
+        id: req.body.id,
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    };
+
+    const collection = req.app.locals.collection;
+    collection.insert(user, function(err, result){
+        if(err) return console.log(err);
+        res.send(user);
+    });
 });
 
 app.get("/pusher/auth/?*", (req, res) =>{
