@@ -120,12 +120,12 @@ app.post("/pusher/auth/signing", (req, res) => {
         email: req.body.email,
         password: req.body.password
     };
-    const error = {
-        err: 'користувач з таким емейлом вже зареєстрований'
-    }
     const collection = req.app.locals.collection;
     const checkUser = req.app.locals.collection.findOne({email: req.body.email});
-    if (checkUser) return res.send(checkUser);
+    const error = {
+        err: checkUser
+    };
+    if (checkUser) return res.send(error);
     collection.insertOne(user, function(err, result){
         if(err) return console.log(err);
         res.send(user);
