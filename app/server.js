@@ -128,10 +128,10 @@ app.post("/pusher/auth/signing", (req, res) => {
         if (err) return console.log(err);
         res.send(email);
     })
-    const error = {
-        err: checkUser
-    };
-    if (checkUser !== {}) return res.send(error);
+    // const error = {
+    //     err: checkUser
+    // };
+    if (checkUser) return res.send(checkUser);
     else{
         collection.insertOne(user, function (err, result) {
             if (err) return console.log(err);
