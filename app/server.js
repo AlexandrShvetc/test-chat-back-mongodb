@@ -41,7 +41,7 @@ const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: 
 
 // Allow CORS
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
@@ -126,7 +126,7 @@ app.post("/pusher/auth/signing", (req, res) => {
     // const checkUser = collection.findOne(query, options);
     const checkUser = collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
-        res.send(email);
+        // res.send(email);
     })
     // const error = {
     //     err: checkUser
