@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const Pusher = require('pusher');
 const config = require('./config');
 const htmlGenerator = require('./html-generator');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const {MongoClient, ServerApiVersion} = require('mongodb');
 
 
 const app = express();
@@ -37,7 +37,7 @@ const debug = (...args) => {
 };
 
 const uri = "mongodb+srv://bx6838ck:bx6838ck@cheapdeepchat.avume.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1});
 
 // Allow CORS
 app.use((req, res, next) => {
@@ -48,11 +48,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-client.connect(function(err, client){
-    if(err) return console.log(err);
+client.connect(function (err, client) {
+    if (err) return console.log(err);
     // dbClient = client;
     app.locals.collection = client.db("chatdb").collection("users");
-    app.listen(3000, function(){
+    app.listen(3000, function () {
         console.log("Сервер ожидает подключения...");
     });
 });
@@ -108,7 +108,7 @@ app.post("/pusher/auth/message", (req, res) => {
 
 app.post("/pusher/auth/signing", (req, res) => {
 
-    if(!req.body) return res.sendStatus(400);
+    if (!req.body) return res.sendStatus(400);
     //
     // const id = req.body.id;
     // const name = req.body.name;
@@ -121,21 +121,25 @@ app.post("/pusher/auth/signing", (req, res) => {
         password: req.body.password
     };
     const collection = req.app.locals.collection;
-    const query = {email: `${req.body.email}`};
-    const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
-    const checkUser = collection.findOne(query, options);
+    // const query = {email: `${req.body.email}`};
+    // const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
+    // const checkUser = collection.findOne(query, options);
+    const checkUser = collection.findOne({email: req.body.email}, function (err, email) {
+        if (err) return console.log(err);
+        res.send(email);
+    })
     const error = {
         err: checkUser
     };
     if (checkUser) return res.send(error);
-    collection.insertOne(user, function(err, result){
-        if(err) return console.log(err);
+    collection.insertOne(user, function (err, result) {
+        if (err) return console.log(err);
         res.send(user);
     });
 });
 
-app.get("/pusher/auth/?*", (req, res) =>{
-    const param =  JSON.stringify(req.query)
+app.get("/pusher/auth/?*", (req, res) => {
+    const param = JSON.stringify(req.query)
     res.send(param)
 });
 
