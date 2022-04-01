@@ -124,19 +124,19 @@ app.post("/pusher/auth/signing", (req, res) => {
     // const query = {email: `${req.body.email}`};
     // const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
     // const checkUser = collection.findOne(query, options);
-    const checkUser = collection.findOne({email: req.body.email}, function (err, email) {
+    collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
-        if (email !== {}) {
+        if (!email) {
             collection.insertOne(user, function (err, result) {
                 if (err) return console.log(err);
-                res.send(user);
+                return res.send(user);
             })
         }
         else{
             const error = {
                 err: 'такий користувач вже існує'
             };
-            res.send(error);
+            return res.send(error);
         }
     });
     // const error = {
