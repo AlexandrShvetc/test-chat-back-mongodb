@@ -127,6 +127,7 @@ app.post("/pusher/auth/signing", (req, res) => {
     const checkUser = collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         // res.send(email);
+        return email;
     })
     // const error = {
     //     err: checkUser
