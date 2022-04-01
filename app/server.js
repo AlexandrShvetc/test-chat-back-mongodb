@@ -75,9 +75,9 @@ app.post(config.ENDPOINT, (req, res) => {
     if (/^presence-/.test(channelName)) {
         // If the request is for a presence channel include some data about the user
         // in the call to authenticate
-        let timestamp = new Date().toISOString();
+        // let timestamp = new Date().toISOString();
         let presenceData = {
-            user_id: `${req.body.user_id}-${timestamp}`,
+            user_id: `${req.body.user_id}`,
             user_info: {
                 name: `${req.body.name}`,
             },
@@ -107,13 +107,7 @@ app.post("/pusher/auth/message", (req, res) => {
 });
 
 app.post("/pusher/auth/signing", (req, res) => {
-
     if (!req.body) return res.sendStatus(400);
-    //
-    // const id = req.body.id;
-    // const name = req.body.name;
-    // const email = req.body.email;
-    // const password = req.body.password;
     const user = {
         id: req.body.id,
         name: req.body.name,
@@ -121,9 +115,6 @@ app.post("/pusher/auth/signing", (req, res) => {
         password: req.body.password
     };
     const collection = req.app.locals.collection;
-    // const query = {email: `${req.body.email}`};
-    // const options = {projection: { _id: 1, id: 1, name: 1, email: 1, password: 1}};
-    // const checkUser = collection.findOne(query, options);
     collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         if (!email) {
@@ -139,17 +130,6 @@ app.post("/pusher/auth/signing", (req, res) => {
             return res.send(error);
         }
     });
-    // const error = {
-    //     err: checkUser
-    // };
-    // if (checkUser) return res.send(checkUser);
-    // else{
-    //     collection.insertOne(user, function (err, result) {
-    //         if (err) return console.log(err);
-    //         res.send(user);
-    //     });
-    // }
-
 });
 
 app.get("/pusher/auth/?*", (req, res) => {
