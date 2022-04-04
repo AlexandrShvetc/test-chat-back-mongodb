@@ -132,6 +132,27 @@ app.post("/pusher/auth/signing", (req, res) => {
     });
 });
 
+app.post("/pusher/auth/login", (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    const collection = req.app.locals.collection;
+    collection.findOne({email: req.body.email}, function (err, email) {
+        if (err) return console.log(err);
+        if (!email) {
+            const error = {
+                err: 'такий користувач не зареєстрований'
+            };
+            return res.send(error);
+        }
+        if (email.password !== req.body.password){
+            const error = {
+                err: 'не вірно введений пароль'
+            };
+            return res.send(error);
+        }
+        return res.send(email)
+    });
+});
+
 app.get("/pusher/auth/?*", (req, res) => {
     const param = JSON.stringify(req.query)
     res.send(param)
