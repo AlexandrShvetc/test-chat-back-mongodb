@@ -170,7 +170,7 @@ app.get("/pusher/auth/messages", (req, res) => {
     //     if (err) return console.log(err);
     //     return res.send(messages)
     // })
-    res.send(JSON.stringify(messages))
+    res.send(messages)
 });
 
 const html = htmlGenerator.generate(config.ENDPOINT);
