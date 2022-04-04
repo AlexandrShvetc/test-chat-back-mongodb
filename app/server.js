@@ -165,7 +165,7 @@ app.post("/pusher/auth/login", (req, res) => {
 app.get("/pusher/auth/messages", (req, res) => {
     // const param = JSON.stringify(req.query)
     const collection = req.app.locals.collectionMessages;
-    let messages = collection.find({}, {_id: 0, msg: 1, ts: 1, user: 1})
+    let messages = collection.find().sort({ts: 1})
     // collection.find({}, function (err, messages){
     //     if (err) return console.log(err);
     //     return res.send(messages)
