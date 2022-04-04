@@ -162,9 +162,10 @@ app.post("/pusher/auth/login", (req, res) => {
     });
 });
 
-app.get("/pusher/auth/?*", (req, res) => {
-    const param = JSON.stringify(req.query)
-    res.send(param)
+app.get("/pusher/auth/messages", (req, res) => {
+    // const param = JSON.stringify(req.query)
+    const collection = req.app.locals.collectionMessages;
+    res.send(collection)
 });
 
 const html = htmlGenerator.generate(config.ENDPOINT);
