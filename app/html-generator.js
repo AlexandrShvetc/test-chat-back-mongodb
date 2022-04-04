@@ -1,5 +1,4 @@
-const generate = endpoint => {
-  return `<html>
+const generate = endpoint => `<html>
   <head>
     <title>Pusher Auth Server Example</title>
   </head>
@@ -25,6 +24,5 @@ curl -X POST <span id="host"></span>${endpoint} \\
       .forEach(node => {node.innerText = window.location.origin})
   </script>
 </html>`;
-};
 
 exports.generate = generate;

@@ -10,9 +10,7 @@ const app = express();
 const port = config.PORT || 3030;
 
 const pusherSdkArgs = {
-    appId: config.APP_ID,
-    key: config.APP_KEY,
-    secret: config.APP_SECRET,
+    appId: config.APP_ID, key: config.APP_KEY, secret: config.APP_SECRET,
 };
 
 if (config.CLUSTER) {
@@ -48,7 +46,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-let myMessagesCollection = {};
 
 client.connect(function (err, client) {
     if (err) return console.log(err);
@@ -80,8 +77,7 @@ app.post(config.ENDPOINT, (req, res) => {
         // in the call to authenticate
         // let timestamp = new Date().toISOString();
         let presenceData = {
-            user_id: `${req.body.user_id}`,
-            user_info: {
+            user_id: `${req.body.user_id}`, user_info: {
                 name: `${req.body.name}`,
             },
         };
@@ -99,13 +95,9 @@ app.post(config.ENDPOINT, (req, res) => {
 app.post("/pusher/auth/message", (req, res) => {
     // const socketId = req.body.socket_id;
     const param = req.body
-    pusher.trigger(
-        "presence-chat",
-        "message",
-        {
-            message: param,
-        },
-    );
+    pusher.trigger("presence-chat", "message", {
+        message: param,
+    },);
     const collection = req.app.locals.collectionMessages;
     collection.insertOne(param, function (err, result) {
         if (err) return console.log(err);
@@ -117,12 +109,10 @@ app.post("/pusher/auth/message", (req, res) => {
 app.post("/pusher/auth/signing", (req, res) => {
     if (!req.body) return res.sendStatus(400);
     const user = {
-        id: req.body.id,
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
+        id: req.body.id, name: req.body.name, email: req.body.email, password: req.body.password
     };
     const collection = req.app.locals.collectionUsers;
+
     collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         if (!email) {
@@ -163,8 +153,8 @@ app.post("/pusher/auth/login", (req, res) => {
 app.post("/pusher/auth/messages", (req, res) => {
     // const param = JSON.stringify(req.query)
     const collection = req.app.locals.collectionMessages;
-    collection.find().sort({ts: 1}).toArray(function (err, messages){
-        if(err) return console.log(err);
+    collection.find().sort({ts: 1}).toArray(function (err, messages) {
+        if (err) return console.log(err);
         res.send(messages);
     })
     // while (messages.hasNext())
