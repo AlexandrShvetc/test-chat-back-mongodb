@@ -165,7 +165,7 @@ app.post("/pusher/auth/messages", (req, res) => {
     const collection = req.app.locals.collectionMessages;
     collection.find().sort({ts: 1}).toArray(function (err, messages){
         if(err) return console.log(err);
-        res.send({messages});
+        res.send(messages);
     })
     // while (messages.hasNext())
     // collection.find({}, function (err, messages){
