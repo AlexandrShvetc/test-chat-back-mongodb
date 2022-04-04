@@ -162,7 +162,7 @@ app.post("/pusher/auth/login", (req, res) => {
     });
 });
 
-app.get("/pusher/auth/messages", (req, res) => {
+app.post("/pusher/auth/messages", (req, res) => {
     // const param = JSON.stringify(req.query)
     const collection = req.app.locals.collectionMessages;
     let messages = collection.find().sort({ts: 1})
