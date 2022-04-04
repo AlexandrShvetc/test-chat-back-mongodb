@@ -60,7 +60,6 @@ client.connect(function (err, client) {
 });
 
 
-
 console.log(config);
 app.post(config.ENDPOINT, (req, res) => {
     debug('received auth request');
@@ -131,8 +130,7 @@ app.post("/pusher/auth/signing", (req, res) => {
                 if (err) return console.log(err);
                 return res.send(user);
             })
-        }
-        else{
+        } else {
             const error = {
                 err: 'такий користувач вже існує'
             };
@@ -152,7 +150,7 @@ app.post("/pusher/auth/login", (req, res) => {
             };
             return res.send(error);
         }
-        if (email.password !== req.body.password){
+        if (email.password !== req.body.password) {
             const error = {
                 err: 'не вірно введений пароль'
             };
@@ -165,12 +163,16 @@ app.post("/pusher/auth/login", (req, res) => {
 app.post("/pusher/auth/messages", (req, res) => {
     // const param = JSON.stringify(req.query)
     const collection = req.app.locals.collectionMessages;
-    let messages = collection.find().sort({ts: 1})
+    collection.find().sort({ts: 1}).toArray(function (err, messages){
+        if(err) return console.log(err);
+        res.send({messages});
+    })
+    // while (messages.hasNext())
     // collection.find({}, function (err, messages){
     //     if (err) return console.log(err);
     //     return res.send(messages)
     // })
-    res.send(messages)
+    // return res.send(messages)
 });
 
 const html = htmlGenerator.generate(config.ENDPOINT);
