@@ -48,14 +48,18 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+let myMessagesCollection = {};
+
 client.connect(function (err, client) {
     if (err) return console.log(err);
-    // dbClient = client;
-    app.locals.collection = client.db("chatdb").collection("users");
+    app.locals.collectionUsers = client.db("chatdb").collection("users");
+    app.locals.collectionMessages = client.db("chatdb").collection("messages");
     app.listen(3000, function () {
         console.log("Сервер ожидает подключения...");
     });
 });
+
+
 
 console.log(config);
 app.post(config.ENDPOINT, (req, res) => {
@@ -103,7 +107,12 @@ app.post("/pusher/auth/message", (req, res) => {
             message: param,
         },
     );
-    res.send(param)
+    const collection = req.app.locals.collectionMessages;
+    collection.insertOne(param, function (err, result) {
+        if (err) return console.log(err);
+        return res.send(param);
+    })
+    // res.send(param)
 });
 
 app.post("/pusher/auth/signing", (req, res) => {
@@ -114,7 +123,7 @@ app.post("/pusher/auth/signing", (req, res) => {
         email: req.body.email,
         password: req.body.password
     };
-    const collection = req.app.locals.collection;
+    const collection = req.app.locals.collectionUsers;
     collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         if (!email) {
@@ -134,7 +143,7 @@ app.post("/pusher/auth/signing", (req, res) => {
 
 app.post("/pusher/auth/login", (req, res) => {
     if (!req.body) return res.sendStatus(400);
-    const collection = req.app.locals.collection;
+    const collection = req.app.locals.collectionUsers;
     collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         if (!email) {
