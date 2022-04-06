@@ -153,9 +153,10 @@ app.post("/pusher/auth/login", (req, res) => {
 app.post("/pusher/auth/messages", (req, res) => {
     // const param = JSON.stringify(req.query)
     const collection = req.app.locals.collectionMessages;
-    collection.find().sort({ts: 1}).skip(req.body.qtty).limit(10).toArray(function (err, messages) {
+    collection.find().sort({ts: -1}).skip(req.body.qtty).limit(10).toArray(function (err, messages) {
         if (err) return console.log(err);
-        res.send(messages);
+        const reversed = messages.reverse();
+        res.send(reversed);
     })
 });
 
