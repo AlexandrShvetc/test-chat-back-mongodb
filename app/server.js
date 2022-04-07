@@ -141,7 +141,10 @@ app.post("/pusher/auth/edituser", (req, res) => {
         if (err) return console.log(err);
         if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
         else {
-            collection.findOneAndUpdate({id: req.body.id}, {$set: {name: req.body.newName}}, {returnNewDocument:true}, function (err, id) {
+            collection.findOneAndUpdate({id: req.body.id}, {$set: {name: req.body.newName}}, {
+                returnDocument: "after",
+                returnNewDocument: true
+            }, function (err, id) {
                 if (err) return console.log(err);
                 if (!id) return {err: 'something gone wrong'}
                 else
