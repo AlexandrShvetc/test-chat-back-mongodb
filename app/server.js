@@ -112,11 +112,10 @@ app.post("/pusher/auth/signing", (req, res) => {
         id: req.body.id, name: req.body.name, email: req.body.email, password: req.body.password
     };
     const collection = req.app.locals.collectionUsers;
-
-    collection.findOne({name: req.body.name},function (err, name) {
+    collection.findOne({name: req.body.name}, function (err, name) {
         if (err) return console.log(err);
         if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
-        else{
+        else {
             collection.findOne({email: req.body.email}, function (err, email) {
                 if (err) return console.log(err);
                 if (!email) {
@@ -133,7 +132,23 @@ app.post("/pusher/auth/signing", (req, res) => {
             });
         }
     })
+});
 
+app.post("/pusher/auth/edituser", (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    const collection = req.app.locals.collectionUsers;
+    collection.findOne({name: req.body.newName}, function (err, name) {
+        if (err) return console.log(err);
+        if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
+        else {
+            collection.findOneAndUpdate({id: req.body.id}, {$set: {name: req.body.newName}}, function (err, id) {
+                if (err) return console.log(err);
+                if (!id) return {err: 'something gone wrong'}
+                else
+                    return res.send(id);
+            });
+        }
+    })
 });
 
 app.post("/pusher/auth/login", (req, res) => {
