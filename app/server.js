@@ -113,6 +113,10 @@ app.post("/pusher/auth/signing", (req, res) => {
     };
     const collection = req.app.locals.collectionUsers;
 
+    collection.findOne({name: req.body.name},function (err, name) {
+        if (err) return console.log(err);
+        if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
+    })
     collection.findOne({email: req.body.email}, function (err, email) {
         if (err) return console.log(err);
         if (!email) {
@@ -122,7 +126,7 @@ app.post("/pusher/auth/signing", (req, res) => {
             })
         } else {
             const error = {
-                err: 'такий користувач вже існує'
+                err: 'користувач з такою поштою вже існує'
             };
             return res.send(error);
         }
