@@ -147,8 +147,12 @@ app.post("/pusher/auth/edituser", (req, res) => {
             }, function (err, id) {
                 if (err) return console.log(err);
                 if (!id) return {err: 'something gone wrong'}
-                else
+                else {
+                    pusher.trigger("presence-chat", "changeNAme", {
+                        id,
+                    },);
                     return res.send(id);
+                }
             });
         }
     })
