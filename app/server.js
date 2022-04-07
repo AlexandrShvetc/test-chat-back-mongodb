@@ -116,21 +116,24 @@ app.post("/pusher/auth/signing", (req, res) => {
     collection.findOne({name: req.body.name},function (err, name) {
         if (err) return console.log(err);
         if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
-    })
-    collection.findOne({email: req.body.email}, function (err, email) {
-        if (err) return console.log(err);
-        if (!email) {
-            collection.insertOne(user, function (err, result) {
+        else{
+            collection.findOne({email: req.body.email}, function (err, email) {
                 if (err) return console.log(err);
-                return res.send(user);
-            })
-        } else {
-            const error = {
-                err: 'користувач з такою поштою вже існує'
-            };
-            return res.send(error);
+                if (!email) {
+                    collection.insertOne(user, function (err, result) {
+                        if (err) return console.log(err);
+                        return res.send(user);
+                    })
+                } else {
+                    const error = {
+                        err: 'користувач з такою поштою вже існує'
+                    };
+                    return res.send(error);
+                }
+            });
         }
-    });
+    })
+
 });
 
 app.post("/pusher/auth/login", (req, res) => {
