@@ -148,7 +148,7 @@ app.post("/pusher/auth/edituser", (req, res) => {
                 if (err) return console.log(err);
                 if (!id) return {err: 'something gone wrong'}
                 else {
-                    pusher.trigger("presence-chat", "changeNAme", {
+                    pusher.trigger("presence-chat", "change_name", {
                         id,
                     },);
                     return res.send(id);
@@ -172,7 +172,7 @@ app.post("/pusher/auth/login", (req, res) => {
         if (email.password !== req.body.password) {
             const error = {
                 err: 'не вірно введений пароль'
-            };
+            }
             return res.send(error);
         }
         return res.send(email)
