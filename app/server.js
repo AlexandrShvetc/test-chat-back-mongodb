@@ -159,6 +159,7 @@ app.post("/pusher/auth/edituser", (req, res) => {
 });
 
 app.post("/pusher/auth/delete-message", (req, res) => {
+    console.log(req.body)
     if (!req.body) return res.sendStatus(400);
     const collection = req.app.locals.collectionUsers;
     collection.findOneAndDelete({_id: `${req.body._id}`}, function (err, id) {
