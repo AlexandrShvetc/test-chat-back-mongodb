@@ -95,12 +95,15 @@ app.post(config.ENDPOINT, (req, res) => {
 app.post("/pusher/auth/message", (req, res) => {
     // const socketId = req.body.socket_id;
     const param = req.body
-    pusher.trigger("presence-chat", "message", {
-        message: param,
-    },);
+    // pusher.trigger("presence-chat", "message", {
+    //     message: param,
+    // },);
     const collection = req.app.locals.collectionMessages;
     collection.insertOne(param, function (err, result) {
         if (err) return console.log(err);
+        pusher.trigger("presence-chat", "message", {
+            message: param,
+        },);
         return res.send(param);
     })
     // res.send(param)
