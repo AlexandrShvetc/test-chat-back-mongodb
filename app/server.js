@@ -169,7 +169,7 @@ app.post("/pusher/auth/delete-message", (req, res) => {
         }
     });
     pusher.trigger("presence-chat", "delete-message",
-    {_id: req.body.ts},
+    {ts: req.body.ts},
     );
 });
 
