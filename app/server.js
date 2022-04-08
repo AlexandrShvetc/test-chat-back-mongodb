@@ -161,16 +161,17 @@ app.post("/pusher/auth/edituser", (req, res) => {
 app.post("/pusher/auth/delete-message", (req, res) => {
     if (!req.body) return res.sendStatus(400);
     const collection = req.app.locals.collectionUsers;
-    collection.findOneAndDelete({_id: req.body._id}, function (err, id) {
+    collection.findOneAndDelete(, function (err, id) {
         if (err) return console.log(err);
-        if (!id) return {err: 'something gone wrong'}
+
         else {
-            pusher.trigger("presence-chat", "delete-message", {
-                id,
-            },);
+
             return res.send(id);
         }
     });
+    pusher.trigger("presence-chat", "delete-message",
+    {_id: req.body._id},
+    );
 });
 
 app.post("/pusher/auth/login", (req, res) => {
