@@ -95,9 +95,6 @@ app.post(config.ENDPOINT, (req, res) => {
 app.post("/pusher/auth/message", (req, res) => {
     // const socketId = req.body.socket_id;
     const param = req.body
-    // pusher.trigger("presence-chat", "message", {
-    //     message: param,
-    // },);
     const collection = req.app.locals.collectionMessages;
     collection.insertOne(param, function (err, result) {
         if (err) return console.log(err);
@@ -159,6 +156,21 @@ app.post("/pusher/auth/edituser", (req, res) => {
             });
         }
     })
+});
+
+app.post("/pusher/auth/delete-message", (req, res) => {
+    if (!req.body) return res.sendStatus(400);
+    const collection = req.app.locals.collectionUsers;
+    collection.findOneAndDelete({_id: req.body._id}, function (err, id) {
+        if (err) return console.log(err);
+        if (!id) return {err: 'something gone wrong'}
+        else {
+            pusher.trigger("presence-chat", "delete-message", {
+                id,
+            },);
+            return res.send(id);
+        }
+    });
 });
 
 app.post("/pusher/auth/login", (req, res) => {
