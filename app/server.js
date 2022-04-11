@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const Pusher = require('pusher');
 const config = require('./config');
 const htmlGenerator = require('./html-generator');
-const {MongoClient, ServerApiVersion} = require('mongodb');
+const {MongoClient, ServerApiVersion, ObjectID, ObjectId} = require('mongodb');
 
 
 const app = express();
@@ -158,19 +158,37 @@ app.post("/pusher/auth/edituser", (req, res) => {
     })
 });
 
-app.post("/pusher/auth/delete-message", (req, res) => {
-    console.log(req.body)
+app.post("/pusher/auth/edit-message", (req, res) => {
     if (!req.body) return res.sendStatus(400);
-    const collection = req.app.locals.collectionUsers;
-    collection.findOneAndDelete({ts: req.body.ts}, function (err, id) {
+    const collection = req.app.locals.collectionMessages;
+    collection.findOneAndUpdate({_id: new ObjectId(req.body._id)}, {$set: {msg: req.body.msg}}, {
+        returnDocument: "after",
+        returnNewDocument: true
+    }, function (err, id) {
         if (err) return console.log(err);
+        if (!id) return {err: 'something gone wrong'}
         else {
+            pusher.trigger("presence-chat", "edit-message", {
+                id,
+            },);
             return res.send(id);
         }
     });
-    pusher.trigger("presence-chat", "delete-message",
-    {ts: req.body.ts},
-    );
+});
+
+app.post("/pusher/auth/delete-message", (req, res) => {
+    console.log(req.body._id)
+    if (!req.body) return res.sendStatus(400);
+    const collection = req.app.locals.collectionMessages;
+    collection.deleteOne({_id: new ObjectId(req.body._id)}, function (err, id) {
+        if (err) return console.log(err);
+        else {
+            pusher.trigger("presence-chat", "delete-message",
+                {_id: req.body._id},
+            );
+            return res.send(id);
+        }
+    });
 });
 
 app.post("/pusher/auth/login", (req, res) => {
