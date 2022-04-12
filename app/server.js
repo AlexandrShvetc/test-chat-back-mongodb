@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const Pusher = require('pusher');
 const config = require('./config');
 const htmlGenerator = require('./html-generator');
-const {MongoClient, ServerApiVersion, ObjectID, ObjectId} = require('mongodb');
-
+const {MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = config.PORT || 3030;
@@ -36,6 +36,14 @@ const debug = (...args) => {
 
 const uri = "mongodb+srv://bx6838ck:bx6838ck@cheapdeepchat.avume.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1});
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'chipndalechat@gmail.com',
+        pass: 'bx6838ck'
+    }
+});
 
 // Allow CORS
 app.use((req, res, next) => {
@@ -108,10 +116,20 @@ app.post("/pusher/auth/message", (req, res) => {
 
 app.post("/pusher/auth/signing", (req, res) => {
     if (!req.body) return res.sendStatus(400);
+
+    const mailOptions = {
+        from: 'chipndalechat@gmail.com',
+        to: req.body.email,
+        subject: 'Реєстрація у чаті CheapAndDeep',
+        text: 'Ви успішно зареєструвались, тепер можете чатитись на здоровля'
+    };
+
     const user = {
         id: req.body.id, name: req.body.name, email: req.body.email, password: req.body.password
     };
+
     const collection = req.app.locals.collectionUsers;
+
     collection.findOne({name: req.body.name}, function (err, name) {
         if (err) return console.log(err);
         if (name) return res.send({err: 'користувач з таким НікНеймом вже існує'})
@@ -121,6 +139,13 @@ app.post("/pusher/auth/signing", (req, res) => {
                 if (!email) {
                     collection.insertOne(user, function (err, result) {
                         if (err) return console.log(err);
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                            }
+                        });
                         return res.send(user);
                     })
                 } else {
