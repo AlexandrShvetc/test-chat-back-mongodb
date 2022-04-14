@@ -183,8 +183,8 @@ app.post("/pusher/auth/edituser", (req, res) => {
     });
     const collectionMessages = req.app.locals.collectionMessages;
     collectionMessages.findAndModify({
-        query: {user: {id: req.body.id}},
-        update: {$set: {user: {name: req.body.newName}}},
+        query: {'user.id': req.body.id},
+        update: {$set: {'user.name': req.body.newName}},
     })
 });
 
